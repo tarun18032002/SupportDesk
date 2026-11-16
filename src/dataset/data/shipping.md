@@ -1,5 +1,5 @@
 # ShopLite - Shipping Policy
-Policy version: demo-v1. Fictional policies for an educational demo, not a real store.
+
 
 ShopLite ships only within the contiguous United States. International shipping and delivery to Alaska or Hawaii are not available in this demo policy.
 

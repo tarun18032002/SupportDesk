@@ -1,5 +1,4 @@
 # ShopLite - Account Help and Support
-Policy version: demo-v1. Fictional policies for an educational demo, not a real store.
 
 To reset a forgotten password, select Forgot password on the ShopLite sign-in screen and enter the email associated with the account. Use the link in the reset email. If the message does not appear, check spam or junk folders. The assistant cannot generate reset links or verify that a reset email was sent.
 

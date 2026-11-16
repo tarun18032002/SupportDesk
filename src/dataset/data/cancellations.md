@@ -1,5 +1,4 @@
 # ShopLite - Cancellations and Address Changes
-Policy version: demo-v1. Fictional policies for an educational demo, not a real store.
 
 An order may be canceled from the Orders section of the customer's account within 60 minutes after placement, provided warehouse processing has not begun. Both conditions must hold. A request made 90 minutes after placement is outside the self-service cancellation window, even if the order has not yet shipped.
 

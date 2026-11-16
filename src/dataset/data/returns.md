@@ -1,5 +1,5 @@
 # ShopLite - Returns Policy
-Policy version: demo-v1. Fictional policies for an educational demo, not a real store.
+
 
 Customers may request a change-of-mind return within 30 calendar days after delivery. The delivery date, not the order date, starts this window. Products must be unused, in their original packaging, and accompanied by proof of purchase. An unopened pair of headphones delivered 20 days ago is eligible if these conditions are met.
 

@@ -1,5 +1,4 @@
 # ShopLite - Payments and Discounts
-Policy version: demo-v1. Fictional policies for an educational demo, not a real store.
 
 ShopLite accepts Visa, Mastercard, American Express, and PayPal. It does not offer cash on delivery, cryptocurrency payments, or installment plans under this demo policy. All displayed amounts in this knowledge base are in US dollars.
 

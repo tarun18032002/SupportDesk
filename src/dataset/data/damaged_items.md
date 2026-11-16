@@ -1,5 +1,4 @@
 # ShopLite - Damaged Items Policy
-Policy version: demo-v1. Fictional policies for an educational demo, not a real store.
 
 When an item arrives damaged, the customer must report the arrival damage within 7 calendar days after delivery. Submit the claim through the Help section of the ShopLite account and provide the order number, a photo of the damaged product, and a photo of the shipping packaging. Keep the item and packaging until support gives instructions.
 

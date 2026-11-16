@@ -1,5 +1,5 @@
 # ShopLite - Product Warranty
-Policy version: demo-v1. Fictional policies for an educational demo, not a real store.
+
 
 ShopLite electronic products include a limited 12-month warranty beginning on the delivery date. It covers manufacturing defects that appear during normal use. Proof of purchase is required. An electronic product that develops a manufacturing defect 6 months after delivery may qualify if the other conditions are met.
 
