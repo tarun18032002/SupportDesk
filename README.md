@@ -106,15 +106,19 @@ Copy `.env.example` to `.env` and fill values:
 DB_URL=http://localhost:6333
 DB_API_KEY=
 
-LLM_PROVIDER=ollama
-LLM_MODEL=qwen3:4b
-OLLAMA_HOST=http://localhost:11434
+# Deploy-safe default (no PyTorch in the bundle)
+EMBEDDING_PROVIDER=openai
+EMBEDDING_MODEL=text-embedding-3-small
+EMBEDDING_DIMENSION=1536
 
-# Only if LLM_PROVIDER=openai
+LLM_PROVIDER=openai
+LLM_MODEL=gpt-4.1-mini
 OPENAI_API_KEY=
 ```
 
 Do not commit `.env`.
+
+**Important:** if you previously indexed with `BAAI/bge-small-en-v1.5` (384-d), create a new Qdrant collection for 1536-d OpenAI embeddings, then re-ingest. Dimension mismatch will fail at query time.
 
 Start Qdrant (example):
 
@@ -219,12 +223,33 @@ Manual review still needed for answer correctness and whether citations truly su
 | --- | --- |
 | Policy directory | `src/dataset/data` (linked/used as `dataset/data` at runtime) |
 | Collection | `supportdesk_documents` |
-| Embedding model | `BAAI/bge-small-en-v1.5` (384-d) |
+| Embedding provider | `openai` (default) or `huggingface` (optional local) |
+| Embedding model | `text-embedding-3-small` (1536-d) by default |
 | Chunk size / overlap | `256` / `25` |
 | Retrieval top-k | `3` |
-| Default LLM | Ollama `qwen3:4b` (overridable via env) |
+| Default LLM | OpenAI `gpt-4.1-mini` (Ollama optional locally) |
 
 Change embedding model only if you rebuild the index and use the same model at query time.
+
+### Vercel bundle size error (500 MB)
+
+If you see:
+
+```text
+Total bundle size (... MB) exceeds the maximum function size (500 MB)
+```
+
+the cause is local ML stacks (`sentence-transformers` → **PyTorch**, multi-GB).  
+They are **removed from default dependencies**. Use OpenAI embeddings for deploy.
+
+```bash
+uv sync                  # slim install for deploy
+# uv sync --extra local-embed   # only on a local machine if you want HF/bge
+```
+
+Vercel env must include `OPENAI_API_KEY`, `DB_URL`, `EMBEDDING_PROVIDER=openai`, and matching `EMBEDDING_DIMENSION=1536`.
+
+**Note:** Vercel serverless is a poor fit for long-lived WebSockets. For the LinkedIn demo, prefer **Docker** on Railway / Render / Fly. Keep Vercel only if you accept HTTP-only constraints or Large Functions limits.
 
 ---
 
