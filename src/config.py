@@ -8,7 +8,7 @@ logger = logging.getLogger(__name__)
 
 load_dotenv()
 
-dataset_path = "dataset/data"
+dataset_path = "src/dataset/data"
 
 # Qdrant
 db_url = os.getenv("DB_URL")

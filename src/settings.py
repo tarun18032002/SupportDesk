@@ -1,6 +1,6 @@
 from llama_index.core import Settings
 
-from config import (
+from src.config import (
     EMBEDDING_DIMENSION,
     EMBEDDING_MODEL,
     EMBEDDING_PROVIDER,

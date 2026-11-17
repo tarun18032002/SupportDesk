@@ -8,7 +8,7 @@ from llama_index.core import Settings, VectorStoreIndex
 from llama_index.core.schema import BaseNode, NodeWithScore
 from llama_index.vector_stores.qdrant import QdrantVectorStore
 
-from .config import DEFAULT_TOP_K, EMBEDDING_DIMENSION
+from src.config import DEFAULT_TOP_K, EMBEDDING_DIMENSION
 
 
 # ==================================================
@@ -73,17 +73,47 @@ def create_collection(
 def ensure_collection_exists(
     client: QdrantClient,
     collection: str,
+    vector_size: int = EMBEDDING_DIMENSION,
 ) -> None:
 
-    created = create_collection(
+    if client.collection_exists(collection):
+        print(f"Collection '{collection}' already exists.")
+        return
+
+    create_collection(
         client=client,
         collection=collection,
+        vector_size=vector_size,
+    )
+    print(
+        f"Collection '{collection}' created successfully "
+        f"(dim={vector_size})."
     )
 
-    if created:
-        print(f"Collection '{collection}' created successfully.")
-    else:
-        print(f"Collection '{collection}' already exists.")
+
+def recreate_collection(
+    client: QdrantClient,
+    collection: str,
+    vector_size: int = EMBEDDING_DIMENSION,
+    distance: Distance = Distance.COSINE,
+) -> None:
+    """Delete and recreate a collection. Destroys all indexed vectors."""
+
+    if client.collection_exists(collection):
+        client.delete_collection(collection_name=collection)
+        print(f"Deleted existing collection '{collection}'.")
+
+    client.create_collection(
+        collection_name=collection,
+        vectors_config=VectorParams(
+            size=vector_size,
+            distance=distance,
+        ),
+    )
+    print(
+        f"Recreated collection '{collection}' "
+        f"(dim={vector_size}, distance={distance})."
+    )
 
 
 # ==================================================
@@ -110,9 +140,13 @@ def validate_collection_config(
 
     if vectors.size != expected_dimension:
         raise ValueError(
-            f"Vector dimension mismatch. "
-            f"Expected {expected_dimension}, "
-            f"got {vectors.size}"
+            f"Vector dimension mismatch for '{collection}'. "
+            f"Expected {expected_dimension} (current embedding config), "
+            f"got {vectors.size} (existing Qdrant collection). "
+            f"Recreate and re-ingest with:\n"
+            f"  $env:PYTHONPATH='src;.'\n"
+            f"  uv run python src/provision_db.py --recreate\n"
+            f"  # then start the API and POST /ingest"
         )
 
     if vectors.distance != expected_distance:
