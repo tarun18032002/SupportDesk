@@ -1,16 +1,13 @@
 
-from fastapi import APIRouter, WebSocket, WebSocketDisconnect,Request
+from fastapi import APIRouter, WebSocket, WebSocketDisconnect
 from fastapi.encoders import jsonable_encoder
-from pydantic import  ValidationError
-
-
+from pydantic import ValidationError
 
 from src.query import retiver_query
 from src.schema import ChatRequest
-from config import logger
+from src.config import logger
 
 router = APIRouter()
-
 
 
 @router.websocket("/ws/chat")
@@ -20,22 +17,18 @@ async def websocket_chat(websocket: WebSocket):
 
     await websocket.send_json({
         "type": "connected",
-        "message": "Connected to RAG chatbot"
+        "message": "Connected to SupportDesk"
     })
 
-    # Get shared resources initialized during FastAPI lifespan
     index = websocket.app.state.index
     llm = websocket.app.state.llm
+
     try:
         while True:
-
-            # 1. Receive query from frontend
             data = await websocket.receive_json()
 
-            # 2. Validate request
             try:
                 chat_request = ChatRequest.model_validate(data)
-
             except ValidationError:
                 await websocket.send_json({
                     "type": "error",
@@ -44,48 +37,60 @@ async def websocket_chat(websocket: WebSocket):
                 continue
 
             try:
-                # 3. Notify frontend that processing has started
                 await websocket.send_json({
                     "type": "start",
-                    "message": "Generating response..."
+                    "message": "Retrieving policy evidence..."
                 })
 
-                # Callback for every generated token
                 async def send_token(token: str):
-
                     await websocket.send_json({
                         "type": "token",
                         "content": token
                     })
 
-                # 4.Execute streaming RAG pipeline
-                response = await retiver_query(
+                async def send_evidence(evidence: list):
+                    await websocket.send_json({
+                        "type": "evidence",
+                        "data": jsonable_encoder(evidence)
+                    })
+                    await websocket.send_json({
+                        "type": "status",
+                        "message": "Writing grounded answer..."
+                    })
+
+                payload = await retiver_query(
                     query=chat_request.message,
                     index=index,
                     llm=llm,
-                    on_token=send_token
+                    on_token=send_token,
+                    on_evidence=send_evidence,
                 )
 
-                # 5. Send complete LLM response
+                decision = payload["decision"]
+                timings = payload["timings"]
+
                 await websocket.send_json({
                     "type": "result",
-                    "data": jsonable_encoder(response)
+                    "data": {
+                        "status": decision.status,
+                        "message": decision.message,
+                        "evidence_id": decision.evidence_id,
+                        "timings": timings,
+                    }
                 })
 
-                # 6. Notify frontend that processing is complete
                 await websocket.send_json({
                     "type": "done"
                 })
 
             except Exception:
                 logger.exception("RAG query failed")
-
                 await websocket.send_json({
                     "type": "error",
                     "message": "Unable to process your query"
                 })
 
-    except Exception as e:
-        logger.error(e)
     except WebSocketDisconnect:
         logger.info("WebSocket client disconnected")
+    except Exception as exc:
+        logger.error("WebSocket error: %s", exc)

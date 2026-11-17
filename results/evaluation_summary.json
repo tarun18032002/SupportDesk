@@ -1,0 +1,69 @@
+{
+  "run_id": "eval-20261117T070237Z-8a0d1154",
+  "timestamp_utc": "2026-11-17T07:03:18.908969+00:00",
+  "embedding_model": "BAAI/bge-small-en-v1.5",
+  "llm_provider": "openai",
+  "llm_model": "gpt-6-luna",
+  "top_k": 3,
+  "chunk_size": 256,
+  "chunk_overlap": 25,
+  "eval_file": "C:\\tarun\\projects\\SupportDesk\\src\\dataset\\eval_questions.jsonl",
+  "collection": "supportdesk_documents",
+  "total_cases": 16,
+  "source_labeled_cases": 14,
+  "all_required_source_coverage_at_3": {
+    "pass_count": 14,
+    "total": 14,
+    "ratio": 1.0,
+    "target": "at least 13/14"
+  },
+  "behavior_accuracy": {
+    "pass_count": 15,
+    "total": 16,
+    "ratio": 0.9375
+  },
+  "citation_validity": {
+    "pass_count": 16,
+    "total": 16,
+    "ratio": 1.0
+  },
+  "latency_ms": {
+    "p50": 2305.0,
+    "p95": 3118.0,
+    "mean": 2286.25
+  },
+  "special_cases": {
+    "T13": {
+      "expected_status": "insufficient_evidence",
+      "predicted_status": "answered",
+      "behavior_pass": false
+    },
+    "T14": {
+      "expected_status": "insufficient_evidence",
+      "predicted_status": "insufficient_evidence",
+      "behavior_pass": true
+    },
+    "T15": {
+      "expected_status": "needs_clarification",
+      "predicted_status": "needs_clarification",
+      "behavior_pass": true
+    }
+  },
+  "failures": [
+    {
+      "question_id": "T13",
+      "retrieval_pass": null,
+      "behavior_pass": false,
+      "citation_validity_pass": true,
+      "failure_stages": [],
+      "predicted_status": "answered",
+      "expected_status": "insufficient_evidence",
+      "retrieved_files": [
+        "cancellations.md",
+        "returns.md",
+        "shipping.md"
+      ],
+      "expected_sources": []
+    }
+  ]
+}

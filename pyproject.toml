@@ -1,7 +1,7 @@
 [project]
 name = "supportdesk"
 version = "0.1.0"
-description = "Add your description here"
+description = "Grounded ShopLite policy RAG assistant with citations, abstention/clarification, and an evaluation scorecard"
 readme = "README.md"
 requires-python = ">=3.14"
 dependencies = [

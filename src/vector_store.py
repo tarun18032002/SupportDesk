@@ -8,7 +8,7 @@ from llama_index.core import Settings, VectorStoreIndex
 from llama_index.core.schema import BaseNode, NodeWithScore
 from llama_index.vector_stores.qdrant import QdrantVectorStore
 
-from config import DEFAULT_TOP_K, EMBEDDING_DIMENSION
+from .config import DEFAULT_TOP_K, EMBEDDING_DIMENSION
 
 
 # ==================================================

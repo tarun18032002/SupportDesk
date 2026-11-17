@@ -1,21 +1,15 @@
 from llama_index.core import SimpleDirectoryReader,VectorStoreIndex,StorageContext
 from llama_index.core.node_parser import MarkdownNodeParser,SentenceSplitter
 from llama_index.core.vector_stores import SimpleVectorStore
-from llama_index.embeddings.huggingface import HuggingFaceEmbedding
 from llama_index.core import StorageContext,VectorStoreIndex
-from llama_index.vector_stores.qdrant import QdrantVectorStore
-from qdrant_client import QdrantClient
 
-from fastapi import Request
-from config import logger
+
 from src.vector_store import store_nodes_in_index
-
-
 
 from pathlib import Path
 
 # local import
-from config import dataset_path, CHUNK_SIZE,CHUNK_OVERLAP
+from .config import dataset_path, CHUNK_SIZE,CHUNK_OVERLAP,logger
 
 def read_dataset(dataset_path):
     """Read the dataset using simple directory reader from llama_index.core."""

@@ -3,7 +3,7 @@ import asyncio
 import time
 from llama_index.core import VectorStoreIndex
 
-from config import DEFAULT_TOP_K
+from src.config import DEFAULT_TOP_K
 import json
 
 
@@ -52,7 +52,8 @@ async def retiver_query(
     query: str,
     index: VectorStoreIndex,
     llm,
-    on_token=None
+    on_token=None,
+    on_evidence=None,
 ):
 
     total_start = time.perf_counter()
@@ -64,7 +65,6 @@ async def retiver_query(
         # --------------------------------
 
         start = time.perf_counter()
-        
 
         index_init_time = time.perf_counter() - start
 
@@ -104,7 +104,7 @@ async def retiver_query(
         evidence_time = time.perf_counter() - start
 
         # --------------------------------
-        # 5. Print Retrieved Evidence
+        # 5. Print / stream Retrieved Evidence
         # --------------------------------
 
         print("\n========== RETRIEVED EVIDENCE ==========")
@@ -114,6 +114,9 @@ async def retiver_query(
             indent=4,
             default=str
         ))
+
+        if on_evidence is not None:
+            await on_evidence(query_input)
 
         # --------------------------------
         # 6. LLM Generation
@@ -164,7 +167,15 @@ async def retiver_query(
         print("\nLLM RESPONSE:")
         print(response)
 
-        return response
+        return {
+            "decision": response,
+            "evidence": query_input,
+            "timings": {
+                "retrieval_sec": retrieval_time,
+                "generation_sec": llm_time,
+                "total_sec": total_time,
+            },
+        }
     except Exception as e:
         raise e
 

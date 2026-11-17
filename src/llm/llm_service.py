@@ -5,7 +5,7 @@ import time
 
 from .llm_factory import create_llm
 from src.schema import LLMDecision
-from config import logger
+from src.config import logger
 
 
 class LLMService:
@@ -83,7 +83,7 @@ class LLMService:
 
         Select one status:
         1. answered
-        2. need_clarification
+        2. needs_clarification
         3. insufficient_evidence
 
         Rules:

@@ -1,7 +1,7 @@
 from llama_index.core import Settings
 from llama_index.embeddings.huggingface import HuggingFaceEmbedding
 
-from config import EMBEDDING_MODEL
+from .config import EMBEDDING_MODEL
 
 
 def initialize_settings():

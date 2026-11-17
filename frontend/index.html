@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>SupportDesk — Evidence-grounded ShopLite support</title>
+  <meta name="description" content="SupportDesk retrieves ShopLite policy passages, then answers, clarifies, or abstains with citations." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,700&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/styles.css" />
+</head>
+<body>
+  <div class="atmosphere" aria-hidden="true"></div>
+
+  <div class="app">
+    <header class="topbar">
+      <div class="brand-block">
+        <p class="eyebrow">ShopLite policies · local RAG</p>
+        <h1 class="brand">SupportDesk</h1>
+      </div>
+      <div class="topbar-meta">
+        <div class="conn" id="connectionPill" data-state="connecting">
+          <span class="conn-dot" aria-hidden="true"></span>
+          <span id="connectionLabel">Connecting</span>
+        </div>
+        <p class="tagline">Retrieve · Ground · Cite</p>
+      </div>
+    </header>
+
+    <main class="stage">
+      <section class="chat-panel" aria-label="Conversation">
+        <div class="panel-head">
+          <h2>Ask a policy question</h2>
+          <p>Demo path: answer → two policies → clarify → abstain → refuse jailbreak.</p>
+        </div>
+
+        <div class="demo-rail" aria-label="Demo prompts">
+          <button type="button" class="demo-chip" data-demo="answer">1 · Answer</button>
+          <button type="button" class="demo-chip" data-demo="twopolicy">2 · Two policies</button>
+          <button type="button" class="demo-chip" data-demo="clarify">3 · Clarify</button>
+          <button type="button" class="demo-chip" data-demo="abstain">4 · Abstain</button>
+          <button type="button" class="demo-chip" data-demo="jailbreak">5 · Grounded</button>
+        </div>
+
+        <div id="transcript" class="transcript" role="log" aria-live="polite"></div>
+
+        <form id="askForm" class="composer">
+          <label class="sr-only" for="questionInput">Customer question</label>
+          <textarea
+            id="questionInput"
+            maxlength="400"
+            rows="3"
+            placeholder="Example: Can I return unused headphones delivered 20 days ago?"
+            required
+          ></textarea>
+          <div class="composer-actions">
+            <span id="charCount" class="char-count">0 / 400</span>
+            <button type="submit" id="sendBtn" class="send-btn">Ask SupportDesk</button>
+          </div>
+        </form>
+      </section>
+
+      <aside class="evidence-panel" aria-label="Retrieved evidence">
+        <div class="panel-head">
+          <h2>Retrieved evidence</h2>
+          <p>Top policy chunks before the model writes.</p>
+        </div>
+
+        <div id="statusBoard" class="status-board is-idle">
+          <span class="status-kicker">Decision</span>
+          <strong id="statusValue">Waiting for a question</strong>
+          <p id="statusHint">Run a demo chip to show answer, clarify, or abstain on camera.</p>
+        </div>
+
+        <div id="timingRow" class="timing-row" hidden>
+          <div>
+            <span>Retrieve</span>
+            <strong id="retrieveMs">—</strong>
+          </div>
+          <div>
+            <span>Generate</span>
+            <strong id="generateMs">—</strong>
+          </div>
+          <div>
+            <span>Total</span>
+            <strong id="totalMs">—</strong>
+          </div>
+        </div>
+
+        <div id="evidenceList" class="evidence-list">
+          <p class="empty-evidence">Evidence appears here after retrieval — perfect beat for the demo video.</p>
+        </div>
+
+        <div class="eval-note">
+          <p class="eval-title">Held-out eval snapshot</p>
+          <p>Coverage 14/14 · Behavior 15/16 · Citations 16/16</p>
+        </div>
+      </aside>
+    </main>
+  </div>
+
+  <script src="/app.js"></script>
+</body>
+</html>
