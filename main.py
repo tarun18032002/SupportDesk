@@ -14,6 +14,7 @@ from src.config import (
     OLLAMA_HOST,
     OPENAI_API_KEY,
     COLLECTION_NAME,
+    QDRANT_AUTO_RECREATE,
     logger,
     db_url,
     db_api_key,
@@ -31,6 +32,9 @@ async def lifespan(app: FastAPI):
 
     logger.info("Starting SupportDesk...")
 
+    if not db_url:
+        raise RuntimeError("Set DB_URL in the environment")
+
     initialize_settings()
 
     resources = initialize_qdrant_index(
@@ -39,6 +43,7 @@ async def lifespan(app: FastAPI):
         collection=COLLECTION_NAME,
         timeout=30,
         prefer_grpc=False,
+        auto_recreate=QDRANT_AUTO_RECREATE,
     )
 
     if LLM_PROVIDER == "ollama":

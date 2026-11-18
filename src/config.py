@@ -38,6 +38,15 @@ RETRIVER_MODE = os.getenv("RETRIVER_MODE", "Dense")
 
 COLLECTION_NAME = os.getenv("COLLECTION_NAME", "supportdesk_documents")
 
+# If true, delete+recreate the collection when vector size mismatches.
+# Use once on Vercel after switching to OpenAI embeddings, then set back to false.
+QDRANT_AUTO_RECREATE = os.getenv("QDRANT_AUTO_RECREATE", "false").strip().lower() in {
+    "1",
+    "true",
+    "yes",
+    "on",
+}
+
 # LLM
 LLM_PROVIDER = os.getenv("LLM_PROVIDER", "openai")
 LLM_MODEL = os.getenv("LLM_MODEL", "gpt-4.1-mini")

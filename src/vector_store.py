@@ -283,6 +283,7 @@ def initialize_qdrant_index(
     api_key: Optional[str] = None,
     timeout: int = 30,
     prefer_grpc: bool = False,
+    auto_recreate: bool = False,
 ):
 
     client = get_client(
@@ -293,8 +294,38 @@ def initialize_qdrant_index(
     )
 
     try:
+        if not client.collection_exists(collection):
+            if not auto_recreate:
+                raise RuntimeError(
+                    f"Collection '{collection}' does not exist. "
+                    "Run: uv run python src/provision_db.py --recreate"
+                )
+            recreate_collection(
+                client=client,
+                collection=collection,
+                vector_size=EMBEDDING_DIMENSION,
+            )
+        else:
+            try:
+                validate_collection_config(
+                    client=client,
+                    collection=collection,
+                )
+            except ValueError as exc:
+                if not auto_recreate:
+                    raise
+                print(
+                    f"Collection config mismatch; auto-recreating "
+                    f"'{collection}' at dim={EMBEDDING_DIMENSION}. "
+                    f"Reason: {exc}"
+                )
+                recreate_collection(
+                    client=client,
+                    collection=collection,
+                    vector_size=EMBEDDING_DIMENSION,
+                )
 
-        # Attach existing Qdrant collection
+        # Attach Qdrant collection
         vector_store = attach_client_llama_index(
             collection=collection,
             client=client,
